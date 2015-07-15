@@ -2,8 +2,8 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var transform = require('vinyl-transform');
 var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 var babelify = require('babelify');
 var del = require('del');
 var bs = require('browser-sync').create();
@@ -33,14 +33,11 @@ gulp.task('scripts:clean', function (cb) {
 });
 
 gulp.task('scripts', ['scripts:clean'], function () {
-  var bundle = transform(function (filename) {
-    return browserify(filename)
-      .transform(babelify)
-      .bundle();
-  });
-
-  return gulp.src('scripts/app.js')
-    .pipe(bundle)
+  return browserify('scripts/app.js')
+    .transform(babelify)
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe($.buffer())
     .pipe(gulp.dest('test/scripts'))
     .pipe(bs.reload({ stream: true }));
 });
