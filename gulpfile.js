@@ -6,7 +6,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var babelify = require('babelify');
 var del = require('del');
-var bs = require('browser-sync').create();
+var snippet = false;
 var sequence = require('run-sequence');
 
 /**
@@ -21,7 +21,7 @@ gulp.task('styles', ['styles:clean'], function () {
   return gulp.src('styles/app.less')
     .pipe($.less())
     .pipe(gulp.dest('test/styles'))
-    .pipe(bs.reload({ stream: true }));
+    .pipe($.livereload());
 });
 
 /**
@@ -39,7 +39,7 @@ gulp.task('scripts', ['scripts:clean'], function () {
     .pipe(source('app.js'))
     .pipe($.buffer())
     .pipe(gulp.dest('test/scripts'))
-    .pipe(bs.reload({ stream: true }));
+    .pipe($.livereload());
 });
 
 /**
@@ -53,12 +53,13 @@ gulp.task('scripts', ['scripts:clean'], function () {
  gulp.task('assets', ['assets:clean'], function () {
    return gulp.src('assets/**/*')
     .pipe(gulp.dest('test/assets'))
-    .pipe(bs.reload({ stream: true }));
+    .pipe($.livereload());
  });
 
 /**
  * Layouts
  */
+
 
  gulp.task('layouts:clean', function (cb) {
    del(['test/**/*.html'], cb);
@@ -66,7 +67,9 @@ gulp.task('scripts', ['scripts:clean'], function () {
 
  gulp.task('layouts', ['layouts:clean'], function () {
    gulp.src('index.html')
-    .pipe(gulp.dest('test'));
+    .pipe($.if(!!snippet, $.replace('<!-- injected-code -->', snippet)))
+    .pipe(gulp.dest('test'))
+    .pipe($.livereload());
  });
 
  /**
@@ -85,10 +88,8 @@ gulp.task('watch', ['build'], function () {
 });
 
 gulp.task('serve', function () {
-  bs.init({
-    server: './test',
-    open: false
-  });
+  $.livereload.listen();
+  snippet = '<script src="http://localhost:35729/livereload.js"></script>';
 });
 
 gulp.task('default', ['watch', 'serve']);
