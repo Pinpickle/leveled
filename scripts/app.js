@@ -1,22 +1,16 @@
 var React = require('react');
-var Layer = require('./layer');
+var PreviewPane = require('./preview-pane');
+var EditorPane = require('./editor-pane');
 
 var App = React.createClass({
   render: function () {
-    
-    var layerNodes = this.props.layers.map(function (layer) {
-      return (
-        <Layer />
-      );
-    });
-
     return (
-      <div>
-        <h1>Hello World!</h1>
-        {layerNodes}
+      <div className="main-container">
+        <PreviewPane layers={[1, 2, 3]} />
+        <EditorPane />
       </div>
     );
   }
 });
 
-React.render(<App layers={[1, 2, 3]} />, document.body);
+React.render(<App />, document.body);
