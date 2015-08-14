@@ -9,6 +9,12 @@ var del = require('del');
 var snippet = false;
 var sequence = require('run-sequence');
 
+
+var onError = function onError(err) {
+  console.log(err.message);
+  this.emit('end');
+};
+
 /**
  * Styles
  */
@@ -19,6 +25,7 @@ var sequence = require('run-sequence');
 
 gulp.task('styles', ['styles:clean'], function () {
   return gulp.src('styles/app.less')
+    .pipe($.plumber())
     .pipe($.less())
     .pipe(gulp.dest('test/styles'))
     .pipe($.livereload());
@@ -36,6 +43,7 @@ gulp.task('scripts', ['scripts:clean'], function () {
   return browserify('scripts/app.js')
     .transform(babelify)
     .bundle()
+    .on('error', onError)
     .pipe(source('app.js'))
     .pipe($.buffer())
     .pipe(gulp.dest('test/scripts'))
@@ -88,6 +96,7 @@ gulp.task('watch', ['build'], function () {
 });
 
 gulp.task('serve', function () {
+  $.run('electron .').exec();
   $.livereload.listen();
   snippet = '<script src="http://localhost:35729/livereload.js"></script>';
 });
