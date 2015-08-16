@@ -95,10 +95,10 @@ gulp.task('watch', ['build'], function () {
   gulp.watch('assets/**/*', ['assets']);
 });
 
-gulp.task('serve', function () {
+gulp.task('serve', ['watch'], function () {
   $.run('electron .').exec();
   $.livereload.listen();
   snippet = '<script src="http://localhost:35729/livereload.js"></script>';
 });
 
-gulp.task('default', ['watch', 'serve']);
+gulp.task('default', ['serve']);
