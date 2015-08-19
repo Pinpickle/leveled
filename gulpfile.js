@@ -86,19 +86,22 @@ gulp.task('scripts', ['scripts:clean'], function () {
 
 gulp.task('build', ['scripts', 'styles', 'assets', 'layouts'], function () { });
 
-gulp.task('watch', ['build'], function () {
+gulp.task('watch', function () {
   gulp.watch('styles/**/*', ['styles']);
   gulp.watch('scripts/**/*', ['scripts']);
-  gulp.watch('**/*.html', function () {
-    sequence('layouts', bs.reload);
-  });
+  gulp.watch('**/*.html', ['layouts']);
   gulp.watch('assets/**/*', ['assets']);
 });
 
-gulp.task('serve', ['watch'], function () {
+gulp.task('run', function () {
   $.run('electron .').exec();
+});
+
+gulp.task('serve', ['watch'], function () {
   $.livereload.listen();
   snippet = '<script src="http://localhost:35729/livereload.js"></script>';
 });
 
-gulp.task('default', ['serve']);
+gulp.task('default', function () {
+  sequence('serve', 'build', ['run', 'watch']);
+});
