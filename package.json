@@ -31,10 +31,13 @@
     "gulp-react": "^3.0.1",
     "gulp-replace": "^0.5.3",
     "gulp-run": "^1.6.10",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-util": "^3.0.6",
     "react": "^0.13.3",
     "run-sequence": "^1.1.1",
     "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "watchify": "^3.3.1"
   },
   "dependencies": {
     "brace": "^0.5.1",

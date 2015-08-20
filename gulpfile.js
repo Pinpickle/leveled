@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var browserify = require('browserify');
+var watchify = require('watchify');
 var source = require('vinyl-source-stream');
 var babelify = require('babelify');
 var del = require('del');
@@ -35,19 +36,42 @@ gulp.task('styles', ['styles:clean'], function () {
  * Scripts
  */
 
+function generateBrowserify(path) {
+  var bundle = browserify({
+    entries: [path],
+    debug: true,
+    cache: { },
+    packageCache: { }
+  });
+
+  watchify(bundle);
+
+  bundle.on('update', bundleBrowserify.bind(this, bundle));
+  bundle.on('log', $.util.log);
+
+  return bundle.transform(babelify);
+}
+
+var bundle = generateBrowserify('scripts/app.js');
+
+function bundleBrowserify(bundle) {
+  return bundle
+    .bundle()
+    .on('error', onError)
+    .pipe(source('app.js'))
+    .pipe($.buffer())
+    .pipe($.sourcemaps.init())
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('test/scripts'))
+    .pipe($.livereload());
+}
+
 gulp.task('scripts:clean', function (cb) {
   del(['test/scripts/**'], cb);
 });
 
 gulp.task('scripts', ['scripts:clean'], function () {
-  return browserify('scripts/app.js')
-    .transform(babelify)
-    .bundle()
-    .on('error', onError)
-    .pipe(source('app.js'))
-    .pipe($.buffer())
-    .pipe(gulp.dest('test/scripts'))
-    .pipe($.livereload());
+  return bundleBrowserify(bundle);
 });
 
 /**
@@ -88,9 +112,10 @@ gulp.task('build', ['scripts', 'styles', 'assets', 'layouts'], function () { });
 
 gulp.task('watch', function () {
   gulp.watch('styles/**/*', ['styles']);
-  gulp.watch('scripts/**/*', ['scripts']);
-  gulp.watch('**/*.html', ['layouts']);
+  gulp.watch('./index.html', ['layouts']);
   gulp.watch('assets/**/*', ['assets']);
+
+  var b = generateBrowserify('scripts/app.js', true);
 });
 
 gulp.task('run', function () {
