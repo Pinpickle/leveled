@@ -68,7 +68,7 @@ var EditorPane = module.exports = React.createClass({
   onEditorChange: function () {
     var value = this.aceEditor.editor.getValue();
     if (this.props.onChange) {
-      this.props.onChange(value);
+      this.props.onChange(value, this.state.currentTab);
     }
   },
 

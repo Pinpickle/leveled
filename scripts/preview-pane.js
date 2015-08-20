@@ -1,5 +1,6 @@
 var React = require('react');
 var Layer = require('./layer');
+var _ = require('lodash');
 
 var GridOverlay = React.createClass({
   getDefaultProps: function () {
@@ -26,16 +27,18 @@ var GridOverlay = React.createClass({
 
 var PreviewPane = module.exports = React.createClass({
   render: function () {
-    var layerNodes = this.props.layers.map(function (layer) {
-      return (
-        <Layer key={layer}/>
-      );
+    var layerNodes = [];
+
+    _.forOwn(this.props.globalData.layers, function (layer, name) {
+      layerNodes.push((
+        <Layer key={name} />
+      ));
     });
 
     return (
       <div className="preview-pane">
         <p>Preview Pane</p>
-        <GridOverlay gridSize={24}/>
+        <GridOverlay gridSize={this.props.globalData.gridSize}/>
         {layerNodes}
       </div>
     );
