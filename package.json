@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "brace": "^0.5.1",
-    "react-ace": "^2.0.3"
+    "classnames": "^2.1.3"
   }
 }
