@@ -1,6 +1,7 @@
 var React = require('react');
 var Layer = require('./layer');
 var _ = require('lodash');
+var levelData = require('./level-data');
 
 var GridOverlay = React.createClass({
   getDefaultProps: function () {
