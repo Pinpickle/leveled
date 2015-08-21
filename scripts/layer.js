@@ -11,7 +11,8 @@ var Layer = module.exports = React.createClass({
         top: object.y + 'px',
         width: object.width + 'px',
         height: object.height + 'px',
-        backgroundColor: object.color
+        backgroundColor: object.color,
+        transform: 'translate(-' + object.origin[0] + 'px, -' + object.origin[1] + 'px)'
       };
 
       return (<div className={classes} style={styles} key={key}></div>)

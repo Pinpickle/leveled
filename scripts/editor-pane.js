@@ -8,19 +8,32 @@ require('brace/theme/github');
 
 var defaultGlobal =
 `layers:
-- name: hello
+- name: objects
+- name: walls
+  defaultObject: wall
 
 objects:
   player:
     width: 20
     height: 20
+    shape: ellipse
+  wall:
+    color: brown
+    origin: [0, 0]
 `;
 
 var defaultLevel =
 `layers:
-  hello:
+  objects:
   - type: player
-    x: 1
+    x: 100
+    y: 80
+  walls:
+  - x: 72
+    y: 120
+    placement:
+      width: 10
+      height: 3
 `
 
 var EditorTabButton = React.createClass({

@@ -33,14 +33,20 @@ function setGlobal(state) {
   store.global.objects.null = { };
 
   store.global.objects = _.mapValues(store.global.objects, function (object, name) {
-    return _.merge({
+    var ob =  _.merge({
       width: store.global.gridSize,
       height: store.global.gridSize,
       x: 0,
       y: 0,
       color: '#222222',
       shape: 'rect'
-    }, object)
+    }, object);
+
+    if (!_.has(ob, 'origin')) {
+      ob.origin = [ob.width / 2, ob.height / 2];
+    }
+
+    return ob;
   });
 
   updateLevel();
