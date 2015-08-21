@@ -34,7 +34,8 @@ function setGlobal(state) {
       height: store.global.gridSize,
       x: 0,
       y: 0,
-      color: '#222222'
+      color: '#222222',
+      shape: 'rect'
     }, object)
   });
 
