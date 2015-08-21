@@ -8,6 +8,16 @@ var levelData = require('./level-data');
 var App = React.createClass({
   getInitialState: function () {
     levelData.subscribe(this.onLevelDataChange);
+
+    var generateDebounced = function (context) {
+      this.onEditorChange[context] = _.debounce(function (value) {
+        this.onEditorChange(value, context);
+      }.bind(this), 500);
+    }.bind(this);
+
+    generateDebounced('level');
+    generateDebounced('global');
+
     var state = levelData.getState();
 
     return {
@@ -21,6 +31,10 @@ var App = React.createClass({
       level: state.level,
       global: state.global
     });
+  },
+
+  onEditorChangeProxy: function (value, context) {
+    this.onEditorChange[context](value);
   },
 
   onEditorChange: function (value, context) {
@@ -37,7 +51,7 @@ var App = React.createClass({
     return (
       <div className="main-container">
         <PreviewPane layers={[1, 2, 3]} levelData={this.state.level} globalData={this.state.global} />
-        <EditorPane onChange={_.debounce(this.onEditorChange, 500)} />
+        <EditorPane onChange={this.onEditorChangeProxy} />
       </div>
     );
   }

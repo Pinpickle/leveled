@@ -6,6 +6,23 @@ var cx = require('classnames');
 require('brace/mode/yaml');
 require('brace/theme/github');
 
+var defaultGlobal =
+`layers:
+- name: hello
+
+objects:
+  player:
+    width: 20
+    height: 20
+`;
+
+var defaultLevel =
+`layers:
+  hello:
+  - type: player
+    x: 1
+`
+
 var EditorTabButton = React.createClass({
   getDefaultProps: function () {
     return {
@@ -50,14 +67,19 @@ var EditorPane = module.exports = React.createClass({
     this.aceEditor.editor.setSession(session);
 
     this.aceEditor.editor.on('change', this.onEditorChange);
+
+    if (this.props.onChange) {
+      this.props.onChange(this.aceEditor.sessions.global.getValue(), 'global');
+      this.props.onChange(this.aceEditor.sessions.level.getValue(), 'level');
+    }
   },
 
   componentWillMount: function () {
     this.aceEditor = { };
 
     this.aceEditor.sessions = {
-      level: brace.createEditSession('', 'ace/mode/yaml'),
-      global: brace.createEditSession('', 'ace/mode/yaml')
+      level: brace.createEditSession(defaultLevel, 'ace/mode/yaml'),
+      global: brace.createEditSession(defaultGlobal, 'ace/mode/yaml')
     };
   },
 

@@ -28,12 +28,10 @@ var GridOverlay = React.createClass({
 
 var PreviewPane = module.exports = React.createClass({
   render: function () {
-    var layerNodes = [];
-
-    _.forOwn(this.props.globalData.layers, function (layer, name) {
-      layerNodes.push((
-        <Layer key={name} />
-      ));
+    var layerNodes = _.map(this.props.levelData.layers, function (layer) {
+      return (
+        <Layer key={layer.name} data={layer} />
+      );
     });
 
     return (
