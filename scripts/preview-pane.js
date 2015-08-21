@@ -53,7 +53,7 @@ var GridOverlay = React.createClass({
   },
 
   render: function () {
-    var col = 'rgba(0, 0, 0, 0.1)';
+    var col = 'rgba(255, 255, 255, 0.2)';
     var gridline = col + ' 0px,' + col + ' 1px, transparent 1px, transparent ' + this.props.gridSize + 'px';
     // @gridline-col 0px, @gridline-col 1px, transparent 1px, transparent 25px)
 
@@ -89,8 +89,8 @@ var GridOverlay = React.createClass({
         ref="gridOverlayElement"
         onMouseEnter={this.setPopupPosition}
         onMouseMove={this.setPopupPosition}
-        onMouseLeave={this.onMouseLeave}
-        style={style}>
+        onMouseLeave={this.onMouseLeave}>
+          <div className="grid-overlay-grid" style={style}></div>
           <div className={popupClasses} style={popupStyle} >
             <div className="grid-overlay-popup-highlight" style={popupHighlightStyle} ></div>
             <div className="grid-overlay-popup-content">

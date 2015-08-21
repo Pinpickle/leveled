@@ -4,8 +4,17 @@
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+.grid-overlay-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 
   background-position: 0 0;
+  mix-blend-mode: difference;
 }
 
 .grid-overlay-popup {
@@ -21,16 +30,30 @@
 
 .grid-overlay-popup-highlight {
   position: absolute;
-  background: rgba(255, 255, 255, 0.5);
+
+  &::before {
+    content: ' ';
+    display: block;
+
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    bottom: 4px;
+    right: 4px;
+
+    border-radius: 2px;
+
+    mix-blend-mode: difference;
+    background: rgba(255, 255, 255, 0.2);
+  }
 }
 
 .grid-overlay-popup-content {
-  position: absolute;
-  left: 5px;
-  top: 5px;
-  width: 120px;
+  margin-left: 5px;
+  margin-top: 5px;
 
-  padding: 3px;
+  padding: 5px;
+  padding-right: 20px;
 
   background: #fff;
   border-radius: 2px;
