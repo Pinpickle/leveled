@@ -65,7 +65,20 @@ function updateLevel() {
 
     var levelLayer = store.level.layers[layer.name];
     if (levelLayer) {
-      layer.contents = _.map(levelLayer, processLayerContent(layer));
+      var process = processLayerContent(layer);
+      layer.contents = [ ];
+
+      _.each(levelLayer, function (object) {
+        object = process(object);
+
+        if (_.isArray(object)) {
+          object.forEach(function (ob) {
+            layer.contents.push(ob);
+          });
+        } else {
+          layer.contents.push(object);
+        }
+      });
     } else {
       layer.contents = [ ];
     }
@@ -77,29 +90,62 @@ function updateLevel() {
 function processLayerContent(layer) {
   return function (object) {
     var objectPlacementType = getObjectPlacementType(object);
-    var returnObject;
     var typeName = (object.type || layer.defaultObject) || 'null';
     var objectType = store.global.objects[typeName] || store.global.objects['null'];
 
-    if (objectPlacementType === 'single') {
-      var returnObject = _.merge({ }, objectType, object)
+    var createObject = function () {
+      return _.merge({ }, objectType, object);
     }
 
-    return returnObject;
+    switch (objectPlacementType) {
+      case 'bitstring':
+        var objects = [ ];
+        var lines = object.placement.split(/[\r\n]+/g);
+        lines.forEach(function (line, row) {
+          for (var i = 0; i < line.length; i ++) {
+            var ch = line[i];
+            if (ch != '.') {
+              var ob = createObject();
+              ob.x += i * store.level.gridSize;
+              ob.y += row * store.level.gridSize;
+              objects.push(ob);
+            }
+          }
+        });
+
+        return objects;
+      case 'rect':
+        var objects = [ ];
+        var width = (object.placement.width || 1);
+        var height = (object.placement.height || 1);
+        for (var x = 0; x < width; x ++) {
+          for (var y = 0; y < height; y ++) {
+            if ((!object.placement.outline) ||
+              ((y == 0) || (y == height - 1) || (x == 0) || (x == width - 1))) {
+              var ob = createObject();
+              ob.x += x * store.level.gridSize;
+              ob.y += y * store.level.gridSize;
+              objects.push(ob);
+            }
+          }
+        }
+
+        return objects;
+    }
+
+    return createObject();
   };
 }
 
 function getObjectPlacementType(object) {
-  if (_.has(object, 'placementType')) {
-    return object.placementType;
-  }
+  if (_.has(object, 'placement')) {
+    if (_.isString(object.placement)) {
+      return 'bitstring';
+    }
 
-  if (_.isString(object)) {
-    return 'bitstring';
-  }
-
-  if (_.has(object, 'rectWidth') || _.has(object, 'rectHeight')) {
-    return 'rect';
+    if ((_.has(object.placement, 'width')) || (_.has(object.placement, 'height'))) {
+      return 'rect';
+    }
   }
 
   return 'single';
