@@ -90,15 +90,17 @@ var GridOverlay = React.createClass({
         onMouseEnter={this.setPopupPosition}
         onMouseMove={this.setPopupPosition}
         onMouseLeave={this.onMouseLeave}>
-          <div className="grid-overlay-grid" style={style}></div>
+
           <div className={popupClasses} style={popupStyle} >
-            <div className="grid-overlay-popup-highlight" style={popupHighlightStyle} ></div>
             <div className="grid-overlay-popup-content">
               Cell {gridX}:{gridY} - {gridX * this.props.gridSize},{gridY * this.props.gridSize}<br />
               Mouse - {popup.x},{popup.y}<br />
               Center - {(gridX + .5) * this.props.gridSize},{(gridY + .5) * this.props.gridSize}
             </div>
+            <div className="grid-overlay-popup-highlight" style={popupHighlightStyle} ></div>
+
           </div>
+          <div className="grid-overlay-grid" style={style}></div>
       </div>
     );
   }
