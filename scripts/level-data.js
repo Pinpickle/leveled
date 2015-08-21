@@ -16,7 +16,11 @@ function setGlobal(state) {
   store.global = _.assign({
     gridSize: 24,
     layers: [ ],
-    objects: { }
+    objects: { },
+    defaults: {
+      width: 1000,
+      height: 1000
+    }
   }, state);
 
   store.global.layers = _.map(store.global.layers, function (layer, i) {
@@ -49,13 +53,13 @@ function setLevel(state) {
 }
 
 function updateLevel() {
-  store.level = _.assign({
-    layers: { }
-  }, _.cloneDeep(internalLevel));
+  store.level = _.merge({
+    layers: { },
+    gridSize: store.global.gridSize
+  }, store.global.defaults, _.cloneDeep(internalLevel));
 
   var layers = store.level.layers;
 
-  store.level.gridSize = store.global.gridSize;
   store.level.layers = _.map(store.global.layers, function (layer, i) {
     layer = _.cloneDeep(layer);
 

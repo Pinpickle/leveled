@@ -34,11 +34,17 @@ var PreviewPane = module.exports = React.createClass({
       );
     });
 
+    var levelStyles = {
+      width: this.props.levelData.width,
+      height: this.props.levelData.height
+    };
+
     return (
       <div className="preview-pane">
-        <p>Preview Pane</p>
-        <GridOverlay gridSize={this.props.globalData.gridSize}/>
-        {layerNodes}
+        <div className="level-bounds" style={levelStyles}>
+          <GridOverlay gridSize={this.props.globalData.gridSize}/>
+          {layerNodes}
+        </div>
       </div>
     );
   }
