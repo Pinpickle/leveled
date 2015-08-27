@@ -34,7 +34,7 @@ var defaultLevel =
     placement:
       width: 10
       height: 3
-`
+`;
 
 var EditorTabButton = React.createClass({
   getDefaultProps: function () {
